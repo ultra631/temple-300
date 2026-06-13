@@ -141,6 +141,34 @@ body.admin-on .carte-actions{display:flex}
 .mini-btn.suppr{background:rgba(207,59,62,.16);color:#ffc7c8;border-color:rgba(207,59,62,.4)}
 .mini-btn.suppr:hover{background:rgba(207,59,62,.3)}
 
+/* ---------- Carte cliquable ---------- */
+.carte{cursor:pointer;transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease}
+.carte:hover{transform:translateY(-4px);border-color:var(--or);box-shadow:0 26px 52px -20px rgba(0,0,0,.72)}
+.carte:focus-visible{outline:2px solid var(--or);outline-offset:3px}
+
+/* ---------- Fiche détaillée ---------- */
+.modale-detail{position:relative;padding:0;overflow:hidden;max-width:480px}
+.fermer-x{position:absolute;top:12px;right:12px;z-index:3;width:38px;height:38px;border-radius:50%;
+  background:rgba(0,0,0,.45);color:#fff;border:1px solid rgba(255,255,255,.28);font-size:1.1rem;cursor:pointer;
+  line-height:1;display:flex;align-items:center;justify-content:center;transition:.15s}
+.fermer-x:hover{background:rgba(0,0,0,.7)}
+.detail-photo{position:relative;min-height:160px;background:
+  radial-gradient(circle at 30% 20%,rgba(30,127,212,.45),transparent 60%),linear-gradient(160deg,#0e3a78,#0a2550);
+  display:flex;align-items:center;justify-content:center;overflow:hidden}
+.detail-photo img{width:100%;height:auto;display:block}
+.detail-photo .filigrane{font-family:'Anton',sans-serif;font-size:6rem;color:rgba(245,206,46,.12);user-select:none}
+.medaille.grosse{width:90px;height:90px;bottom:-30px;right:20px}
+.medaille.grosse span{font-size:1.85rem}
+.detail-corps{padding:42px 22px 24px}
+.detail-eyebrow{text-transform:uppercase;letter-spacing:3px;font-size:.7rem;font-weight:700;color:var(--or)}
+.detail-nom{font-family:'Anton',sans-serif;font-weight:400;font-size:2rem;color:#fff;line-height:1.04;margin-top:4px}
+.detail-corps .chips{margin-top:12px}
+.detail-infos{margin-top:18px;border-top:1px solid rgba(255,255,255,.12)}
+.detail-ligne{display:flex;justify-content:space-between;gap:14px;padding:11px 2px;border-bottom:1px solid rgba(255,255,255,.08)}
+.detail-cle{color:var(--texte-doux);font-size:.9rem;font-weight:600}
+.detail-val{color:#fff;font-weight:600;font-size:.95rem;text-align:right}
+.detail-corps .mot{margin-top:18px;font-size:1rem}
+
 /* ---------- État vide ---------- */
 .vide{grid-column:1/-1;text-align:center;padding:54px 20px;color:var(--texte-doux)}
 .vide .pin{font-size:2.6rem;display:block;margin-bottom:10px}
@@ -300,6 +328,21 @@ body.admin-on .statut-admin{display:block}
   </div>
 </div>
 
+<!-- ===================== FICHE DÉTAILLÉE D'UN 300 ===================== -->
+<div class="overlay" id="modale-detail" role="dialog" aria-modal="true" aria-labelledby="detail-nom">
+  <div class="modale modale-detail">
+    <button class="fermer-x" id="detail-fermer" aria-label="Fermer la fiche">✕</button>
+    <div class="detail-photo" id="detail-photo"></div>
+    <div class="detail-corps">
+      <p class="detail-eyebrow">🎳 Partie parfaite</p>
+      <h2 class="detail-nom" id="detail-nom"></h2>
+      <div class="chips" id="detail-chips"></div>
+      <div class="detail-infos" id="detail-infos"></div>
+      <p class="mot" id="detail-mot"></p>
+    </div>
+  </div>
+</div>
+
 <!-- ===================== FIREBASE + LOGIQUE ===================== -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
@@ -429,7 +472,7 @@ function render(){
   }
 
   grille.innerHTML = liste.map((i, idx) => `
-    <article class="carte" style="animation-delay:${Math.min(idx*60,500)}ms">
+    <article class="carte" data-id="${i.id}" tabindex="0" role="button" aria-label="Voir la fiche de ${esc(i.joueur)}" style="animation-delay:${Math.min(idx*60,500)}ms">
       <div class="carte-photo">
         ${i.photo
           ? `<img src="${i.photo}" alt="Photo de ${esc(i.joueur)}">`
@@ -575,21 +618,58 @@ $("form-valider").addEventListener("click", async () => {
   }
 });
 
-// --- Boutons Modifier / Supprimer (délégation) ---
+// --- Clics sur la grille : boutons admin OU ouvrir la fiche ---
 grille.addEventListener("click", async (e) => {
   const ed = e.target.closest("[data-edit]");
   const su = e.target.closest("[data-suppr]");
   if (ed){
+    e.stopPropagation();
     const item = items.find(i => i.id === ed.dataset.edit);
     if (item) ouvrirForm(item);
+    return;
   }
   if (su){
+    e.stopPropagation();
     if (confirm("Supprimer cette partie parfaite? Cette action est définitive.")){
       try { await deleteDoc(doc(db, "parties", su.dataset.suppr)); }
       catch (err){ alert("Suppression impossible. Es-tu connecté en admin?"); }
     }
+    return;
+  }
+  const carte = e.target.closest(".carte");
+  if (carte && carte.dataset.id) ouvrirDetail(carte.dataset.id);
+});
+// Clavier : Entrée ou Espace ouvre la fiche
+grille.addEventListener("keydown", (e) => {
+  if (e.key === "Enter" || e.key === " "){
+    const carte = e.target.closest(".carte");
+    if (carte && carte.dataset.id){ e.preventDefault(); ouvrirDetail(carte.dataset.id); }
   }
 });
+
+// --- Remplit et ouvre la fiche détaillée d'un 300 ---
+function ouvrirDetail(id){
+  const i = items.find(x => x.id === id);
+  if (!i) return;
+  const photo = i.photo
+    ? `<img src="${i.photo}" alt="Photo de ${esc(i.joueur)}">`
+    : `<span class="filigrane">300</span>`;
+  $("detail-photo").innerHTML = photo + `<div class="medaille grosse"><span>300</span></div>`;
+  $("detail-nom").textContent = i.joueur;
+  $("detail-chips").innerHTML =
+    `<span class="chip or">🎳 ${esc(i.ligue)}</span><span class="chip">${esc(i.saison)}</span>`;
+  let infos = `<div class="detail-ligne"><span class="detail-cle">📅 Date de l'exploit</span><span class="detail-val">${esc(formatDate(i.date))}</span></div>`;
+  infos += `<div class="detail-ligne"><span class="detail-cle">🎳 Ligue</span><span class="detail-val">${esc(i.ligue)}</span></div>`;
+  infos += `<div class="detail-ligne"><span class="detail-cle">🗓️ Saison</span><span class="detail-val">${esc(i.saison)}</span></div>`;
+  if (i.allee) infos += `<div class="detail-ligne"><span class="detail-cle">🎯 Allée</span><span class="detail-val">${esc(i.allee)}</span></div>`;
+  infos += `<div class="detail-ligne"><span class="detail-cle">🏆 Pointage</span><span class="detail-val">300 · partie parfaite</span></div>`;
+  $("detail-infos").innerHTML = infos;
+  const mot = $("detail-mot");
+  if (i.commentaire){ mot.textContent = i.commentaire; mot.style.display = "block"; }
+  else mot.style.display = "none";
+  ouvrir("modale-detail");
+}
+$("detail-fermer").addEventListener("click", () => fermer("modale-detail"));
 
 /* ===================== UTILITAIRES MODALES ===================== */
 function ouvrir(id){ $(id).classList.add("open"); }

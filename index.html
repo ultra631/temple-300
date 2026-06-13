@@ -188,6 +188,64 @@ body.admin-on .carte-actions{display:flex}
 .vide .pin{font-size:2.6rem;display:block;margin-bottom:10px}
 .vide h3{font-family:'Anton',sans-serif;font-weight:400;color:var(--or-clair);font-size:1.5rem;margin-bottom:6px}
 
+/* ---------- Bouton Mode télé ---------- */
+.btn-tv{font-family:inherit;font-weight:700;font-size:.92rem;cursor:pointer;color:var(--texte);
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:11px 16px;transition:.2s;display:inline-flex;align-items:center;gap:6px}
+.btn-tv:hover{border-color:var(--or);background:rgba(245,206,46,.12);color:var(--or-clair)}
+
+/* ---------- Dernière parfaite en vedette ---------- */
+.vedette{max-width:1080px;margin:26px auto 0;padding:0 16px}
+.vedette-carte{display:flex;align-items:center;gap:16px;cursor:pointer;
+  background:linear-gradient(135deg,rgba(245,206,46,.16),rgba(30,127,212,.12));
+  border:1px solid var(--bordure-or);border-radius:18px;padding:14px 18px;box-shadow:var(--ombre);transition:transform .18s}
+.vedette-carte:hover{transform:translateY(-3px)}
+.vedette-photo{width:72px;height:72px;border-radius:14px;overflow:hidden;flex:0 0 auto;background:linear-gradient(160deg,#0e3a78,#0a2550);display:flex;align-items:center;justify-content:center}
+.vedette-photo img{width:100%;height:100%;object-fit:cover}
+.vedette-photo span{font-family:'Anton',sans-serif;color:rgba(245,206,46,.3);font-size:1.6rem}
+.vedette-txt{min-width:0}
+.vedette-eyebrow{text-transform:uppercase;letter-spacing:2px;font-size:.68rem;font-weight:800;color:var(--or)}
+.vedette-nom{font-family:'Anton',sans-serif;font-size:1.5rem;color:#fff;line-height:1.05;margin-top:2px}
+.vedette-meta{color:var(--texte-doux);font-size:.85rem;margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ---------- Palmarès des joueurs ---------- */
+.palmares{max-width:1080px;margin:26px auto 0;padding:0 16px}
+.palmares-boite{background:linear-gradient(165deg,var(--bleu-plaque),var(--bleu-plaque-2));border:1px solid rgba(245,206,46,.28);border-radius:18px;padding:18px 18px 10px;box-shadow:var(--ombre)}
+.palmares-titre{font-family:'Anton',sans-serif;font-weight:400;color:var(--or-clair);font-size:1.3rem;margin-bottom:10px}
+.palmares-rang{display:flex;align-items:center;gap:12px;padding:9px 6px;border-bottom:1px solid rgba(255,255,255,.08)}
+.palmares-rang:last-child{border-bottom:none}
+.palmares-pos{width:30px;text-align:center;font-family:'Anton',sans-serif;font-size:1.1rem;color:var(--texte-doux);flex:0 0 auto}
+.palmares-nom{flex:1;color:#fff;font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.palmares-cnt{flex:0 0 auto;font-weight:700;color:var(--or-clair);background:rgba(245,206,46,.14);border:1px solid rgba(245,206,46,.35);border-radius:999px;padding:3px 11px;font-size:.85rem}
+
+/* ---------- Boutons de partage (fiche) ---------- */
+.detail-partage{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap}
+.btn-partage{flex:1;min-width:110px;font-family:inherit;font-weight:600;font-size:.88rem;cursor:pointer;border-radius:11px;padding:10px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.07);color:var(--texte);transition:.15s;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.btn-partage:hover{background:rgba(255,255,255,.14)}
+.btn-partage.fb{background:#1877f2;border-color:#1877f2;color:#fff}
+.btn-partage.fb:hover{filter:brightness(1.08)}
+
+/* ---------- Mode télé / diaporama ---------- */
+.tv-overlay{position:fixed;inset:0;z-index:80;background:radial-gradient(120% 90% at 50% 0%,#0a3f8c,#04132e);display:none;align-items:center;justify-content:center;overflow:hidden}
+.tv-overlay.open{display:flex}
+.tv-titre{position:absolute;top:22px;left:0;right:0;text-align:center;font-family:'Anton',sans-serif;color:var(--or);font-size:1.4rem;letter-spacing:1px;opacity:.85;z-index:2}
+.tv-quit{position:absolute;top:18px;right:18px;z-index:5;background:rgba(0,0,0,.5);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:999px;padding:10px 18px;font-family:inherit;font-weight:700;cursor:pointer}
+.tv-quit:hover{background:rgba(0,0,0,.7)}
+#tv-scene{position:absolute;inset:0}
+.tv-slide{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:8vh 6vw;opacity:0;transition:opacity .8s;pointer-events:none}
+.tv-slide.actif{opacity:1}
+.tv-photo{width:min(44vh,78vw);height:min(44vh,78vw);border-radius:24px;overflow:hidden;border:4px solid var(--or);box-shadow:0 30px 80px -20px #000;background:linear-gradient(160deg,#0e3a78,#0a2550);display:flex;align-items:center;justify-content:center;position:relative}
+.tv-photo img{width:100%;height:100%;object-fit:cover}
+.tv-photo .filigrane{font-family:'Anton',sans-serif;font-size:8rem;color:rgba(245,206,46,.18)}
+.tv-300{position:absolute;bottom:-22px;right:-10px;width:88px;height:88px;border-radius:50%;background:radial-gradient(circle at 35% 30%,var(--or-clair),var(--or) 55%,var(--or-fonce));border:4px solid #fff7df;display:flex;align-items:center;justify-content:center}
+.tv-300 span{font-family:'Anton',sans-serif;font-size:1.85rem;color:#5a3d04}
+.tv-nom{font-family:'Anton',sans-serif;font-size:clamp(2.2rem,7vw,5rem);color:#fff;margin-top:44px;line-height:1}
+.tv-sous{color:var(--or-clair);font-size:clamp(1rem,3vw,1.6rem);margin-top:14px;font-weight:600}
+.tv-meta{color:var(--texte-doux);font-size:clamp(.9rem,2.4vw,1.2rem);margin-top:6px}
+.tv-vide{color:#fff;font-size:1.4rem;text-align:center;padding:0 6vw}
+
+/* ---------- Confettis ---------- */
+#confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:90;display:none}
+
 /* ---------- Pied de page ---------- */
 footer{text-align:center;padding:28px 18px 40px;color:var(--texte-doux);font-size:.85rem;border-top:1px solid rgba(255,255,255,.08)}
 footer a{font-weight:600;text-decoration:none}
@@ -261,12 +319,15 @@ body.admin-on .statut-admin{display:block}
     <input type="search" id="recherche" placeholder="🔍 Chercher un joueur, une ligue…" aria-label="Recherche">
     <select id="filtre-ligue" aria-label="Filtrer par ligue"><option value="">Toutes les ligues</option></select>
     <select id="filtre-saison" aria-label="Filtrer par saison"><option value="">Toutes les saisons</option></select>
+    <button class="btn-tv" id="btn-tv" title="Affichage plein écran pour une télé">📺 Mode télé</button>
     <button class="btn-ajouter" id="btn-ajouter">＋ Ajouter un 300</button>
   </div>
 </header>
 
-<!-- ===================== GRILLE ===================== -->
+<!-- ===================== CONTENU ===================== -->
 <main>
+  <div class="vedette" id="vedette"></div>
+  <section class="palmares" id="palmares"></section>
   <section class="grille" id="grille"></section>
 </main>
 
@@ -353,6 +414,7 @@ body.admin-on .statut-admin{display:block}
       <div class="chips" id="detail-chips"></div>
       <div class="detail-infos" id="detail-infos"></div>
       <p class="mot" id="detail-mot"></p>
+      <div class="detail-partage" id="detail-partage"></div>
     </div>
   </div>
 </div>
@@ -366,6 +428,16 @@ body.admin-on .statut-admin{display:block}
     <div id="corbeille-liste"></div>
   </div>
 </div>
+
+<!-- ===================== MODE TÉLÉ ===================== -->
+<div class="tv-overlay" id="tv">
+  <div class="tv-titre">🎳 Le Temple des 300</div>
+  <button class="tv-quit" id="tv-quit">✕ Quitter</button>
+  <div id="tv-scene"></div>
+</div>
+
+<!-- Confettis -->
+<canvas id="confetti-canvas"></canvas>
 
 <!-- ===================== FIREBASE + LOGIQUE ===================== -->
 <script type="module">
@@ -410,6 +482,10 @@ let items = [];
 let isAdmin = false;
 let editId = null;
 let photoData = null;  // photo compressée (dataURL) du formulaire
+let detailId = null;   // id de la fiche actuellement ouverte
+let deepLinkFait = false;
+let tvTimer = null, tvIdx = 0, tvList = [];
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 const $ = (id) => document.getElementById(id);
 const grille = $("grille");
@@ -434,6 +510,9 @@ if (db) {
     majFiltres();
     render();
     renderCorbeille();
+    renderVedette();
+    renderPalmares();
+    verifDeepLink();
   }, (err) => console.error("Lecture Firestore :", err));
 }
 
@@ -631,6 +710,7 @@ $("form-valider").addEventListener("click", async () => {
     return;
   }
   try {
+    const ajout = !editId;
     if (editId){
       await updateDoc(doc(db, "parties", editId), data);
     } else {
@@ -638,6 +718,7 @@ $("form-valider").addEventListener("click", async () => {
       await addDoc(collection(db, "parties"), data);
     }
     fermer("modale-form");
+    if (ajout && !reduceMotion) confettis();
   } catch (e) {
     err.textContent = "Impossible d'enregistrer. Es-tu bien connecté en admin?";
     err.style.display = "block";
@@ -694,9 +775,47 @@ function ouvrirDetail(id){
   const mot = $("detail-mot");
   if (i.commentaire){ mot.textContent = i.commentaire; mot.style.display = "block"; }
   else mot.style.display = "none";
+
+  // Boutons de partage
+  detailId = i.id;
+  const url = lienVers(i.id);
+  const texte = `${i.joueur} a réussi une partie parfaite de 300 au Temple des 300! 🎳`;
+  let boutons = "";
+  if (navigator.share) boutons += `<button class="btn-partage" id="part-natif">📲 Partager</button>`;
+  boutons += `<button class="btn-partage fb" id="part-fb">📘 Facebook</button>`;
+  boutons += `<button class="btn-partage" id="part-copie">🔗 Copier le lien</button>`;
+  $("detail-partage").innerHTML = boutons;
+  if (navigator.share) $("part-natif").onclick = () => navigator.share({ title:"Le Temple des 300", text:texte, url }).catch(()=>{});
+  $("part-fb").onclick = () => window.open("https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(url), "_blank", "noopener");
+  $("part-copie").onclick = async (e) => {
+    try { await navigator.clipboard.writeText(url); e.target.textContent = "✅ Lien copié!"; setTimeout(()=>{ e.target.textContent = "🔗 Copier le lien"; }, 1800); }
+    catch { prompt("Copie ce lien :", url); }
+  };
+
+  history.replaceState(null, "", "#p=" + i.id);
   ouvrir("modale-detail");
+  if (!reduceMotion) confettis();
 }
-$("detail-fermer").addEventListener("click", () => fermer("modale-detail"));
+
+function lienVers(id){ return location.origin + location.pathname + "#p=" + id; }
+
+function fermerDetail(){
+  fermer("modale-detail");
+  detailId = null;
+  if (location.hash) history.replaceState(null, "", location.pathname + location.search);
+}
+
+// Ouvre automatiquement une fiche partagée par lien (#p=ID)
+function verifDeepLink(){
+  if (deepLinkFait) return;
+  const h = location.hash;
+  if (h.startsWith("#p=")){
+    const id = h.slice(3);
+    const it = items.find(x => x.id === id && !x.supprime);
+    if (it){ deepLinkFait = true; ouvrirDetail(id); }
+  }
+}
+$("detail-fermer").addEventListener("click", fermerDetail);
 
 /* ===================== CORBEILLE ===================== */
 function renderCorbeille(){
@@ -740,15 +859,131 @@ $("corbeille-liste").addEventListener("click", async (e) => {
   }
 });
 
+/* ===================== PALMARÈS DES JOUEURS ===================== */
+function renderPalmares(){
+  const el = $("palmares");
+  const actifs = items.filter(i => !i.supprime);
+  if (actifs.length < 2){ el.innerHTML = ""; return; }
+  const map = {};
+  actifs.forEach(i => {
+    const nom = (i.joueur || "").trim();
+    if (!nom) return;
+    const cle = nom.toLowerCase();
+    if (!map[cle]) map[cle] = { nom, n: 0 };
+    map[cle].n++;
+  });
+  const rangs = Object.values(map).sort((a,b) => b.n - a.n || a.nom.localeCompare(b.nom)).slice(0, 10);
+  const cls = ["or","argent","bronze"], med = ["🥇","🥈","🥉"];
+  el.innerHTML = `<div class="palmares-boite">
+    <div class="palmares-titre">🏆 Palmarès des joueurs</div>
+    ${rangs.map((r,idx) => `
+      <div class="palmares-rang ${cls[idx] || ""}">
+        <span class="palmares-pos">${idx < 3 ? med[idx] : (idx+1)}</span>
+        <span class="palmares-nom">${esc(r.nom)}</span>
+        <span class="palmares-cnt">${r.n} × 300</span>
+      </div>`).join("")}
+  </div>`;
+}
+
+/* ===================== DERNIÈRE PARFAITE EN VEDETTE ===================== */
+function renderVedette(){
+  const el = $("vedette");
+  const actifs = items.filter(i => !i.supprime);
+  if (actifs.length === 0){ el.innerHTML = ""; return; }
+  const d = [...actifs].sort((a,b) => (b.date||"").localeCompare(a.date||""))[0];
+  el.innerHTML = `
+    <div class="vedette-carte" data-id="${d.id}" role="button" tabindex="0" aria-label="Voir la dernière partie parfaite">
+      <div class="vedette-photo">${d.photo ? `<img src="${d.photo}" alt="">` : `<span>300</span>`}</div>
+      <div class="vedette-txt">
+        <div class="vedette-eyebrow">⭐ Dernière partie parfaite</div>
+        <div class="vedette-nom">${esc(d.joueur)}</div>
+        <div class="vedette-meta">🎳 ${esc(d.ligue)} · ${esc(formatDate(d.date))}</div>
+      </div>
+    </div>`;
+}
+$("vedette").addEventListener("click", (e) => { const c = e.target.closest("[data-id]"); if (c) ouvrirDetail(c.dataset.id); });
+$("vedette").addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " "){ const c = e.target.closest("[data-id]"); if (c){ e.preventDefault(); ouvrirDetail(c.dataset.id); } } });
+
+/* ===================== MODE TÉLÉ / DIAPORAMA ===================== */
+function ouvrirTV(){
+  tvList = items.filter(i => !i.supprime).sort((a,b) => (b.date||"").localeCompare(a.date||""));
+  const scene = $("tv-scene");
+  if (tvList.length === 0){
+    scene.innerHTML = `<div class="tv-vide">Aucune partie parfaite à afficher pour l'instant 🎳</div>`;
+  } else {
+    scene.innerHTML = tvList.map((i,idx) => `
+      <div class="tv-slide" data-idx="${idx}">
+        <div class="tv-photo">${i.photo ? `<img src="${i.photo}" alt="">` : `<span class="filigrane">300</span>`}<div class="tv-300"><span>300</span></div></div>
+        <div class="tv-nom">${esc(i.joueur)}</div>
+        <div class="tv-sous">🎳 ${esc(i.ligue)} · ${esc(i.saison)}</div>
+        <div class="tv-meta">${esc(formatDate(i.date))}${i.allee ? ` · Allée ${esc(i.allee)}` : ""}</div>
+      </div>`).join("");
+  }
+  $("tv").classList.add("open");
+  const el = $("tv"); if (el.requestFullscreen) el.requestFullscreen().catch(()=>{});
+  tvIdx = 0; majTV();
+  clearInterval(tvTimer);
+  if (tvList.length > 1) tvTimer = setInterval(() => { tvIdx = (tvIdx + 1) % tvList.length; majTV(); }, 6000);
+}
+function majTV(){
+  document.querySelectorAll("#tv .tv-slide").forEach(s => s.classList.toggle("actif", +s.dataset.idx === tvIdx));
+}
+function fermerTV(){
+  $("tv").classList.remove("open");
+  clearInterval(tvTimer); tvTimer = null;
+  if (document.fullscreenElement) document.exitFullscreen().catch(()=>{});
+}
+$("btn-tv").addEventListener("click", ouvrirTV);
+$("tv-quit").addEventListener("click", fermerTV);
+$("tv-scene").addEventListener("click", () => { if (tvList.length > 1){ tvIdx = (tvIdx + 1) % tvList.length; majTV(); } });
+
+/* ===================== CONFETTIS ===================== */
+function confettis(){
+  const cv = $("confetti-canvas");
+  cv.style.display = "block";
+  const ctx = cv.getContext("2d");
+  const W = cv.width = innerWidth, H = cv.height = innerHeight;
+  const couleurs = ["#f5ce2e","#1e7fd4","#cf3b3e","#ffffff","#fce68a"];
+  const parts = [];
+  for (let k = 0; k < 130; k++){
+    parts.push({ x: W/2 + (Math.random()-.5)*W*0.4, y: H*0.32 + (Math.random()-.5)*60,
+      vx: (Math.random()-.5)*9, vy: Math.random()*-10 - 3, g: 0.18 + Math.random()*0.1,
+      c: couleurs[k % couleurs.length], s: 5 + Math.random()*6, r: Math.random()*6, vr: (Math.random()-.5)*0.3, life: 1 });
+  }
+  let t0 = performance.now();
+  function frame(t){
+    const dt = Math.min((t - t0)/16, 3); t0 = t;
+    ctx.clearRect(0,0,W,H);
+    let vivants = 0;
+    parts.forEach(p => {
+      p.vy += p.g*dt; p.x += p.vx*dt; p.y += p.vy*dt; p.r += p.vr*dt; p.life -= 0.006*dt;
+      if (p.y < H + 20 && p.life > 0){ vivants++;
+        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r); ctx.globalAlpha = Math.max(p.life, 0);
+        ctx.fillStyle = p.c; ctx.fillRect(-p.s/2, -p.s/2, p.s, p.s*0.6); ctx.restore();
+      }
+    });
+    if (vivants > 0) requestAnimationFrame(frame);
+    else cv.style.display = "none";
+  }
+  requestAnimationFrame(frame);
+}
+
 /* ===================== UTILITAIRES MODALES ===================== */
 function ouvrir(id){ $(id).classList.add("open"); }
 function fermer(id){ $(id).classList.remove("open"); }
+function fermerOverlay(o){
+  o.classList.remove("open");
+  if (o.id === "modale-detail" && location.hash){ detailId = null; history.replaceState(null, "", location.pathname + location.search); }
+}
 // Fermer en touchant l'arrière-plan ou avec Échap
 document.querySelectorAll(".overlay").forEach(o => {
-  o.addEventListener("click", (e) => { if (e.target === o) o.classList.remove("open"); });
+  o.addEventListener("click", (e) => { if (e.target === o) fermerOverlay(o); });
 });
 document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") document.querySelectorAll(".overlay.open").forEach(o => o.classList.remove("open"));
+  if (e.key === "Escape"){
+    if ($("tv").classList.contains("open")){ fermerTV(); return; }
+    document.querySelectorAll(".overlay.open").forEach(fermerOverlay);
+  }
 });
 </script>
 </body>

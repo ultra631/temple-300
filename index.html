@@ -169,6 +169,20 @@ body.admin-on .carte-actions{display:flex}
 .detail-val{color:#fff;font-weight:600;font-size:.95rem;text-align:right}
 .detail-corps .mot{margin-top:18px;font-size:1rem}
 
+/* ---------- Corbeille ---------- */
+#modale-corbeille .modale{position:relative}
+.corbeille-vide{color:var(--texte-doux);text-align:center;padding:26px 0}
+.corbeille-item{display:flex;align-items:center;gap:12px;justify-content:space-between;flex-wrap:wrap;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:12px;margin-top:10px}
+.corbeille-info{display:flex;flex-direction:column;min-width:0}
+.corbeille-info strong{color:#fff;font-size:.98rem}
+.corbeille-info span{color:var(--texte-doux);font-size:.82rem}
+.corbeille-btns{display:flex;gap:8px}
+.mini-btn.restore{flex:0 0 auto;padding:7px 12px;background:rgba(46,160,90,.2);color:#bff0cf;border-color:rgba(46,160,90,.45)}
+.mini-btn.restore:hover{background:rgba(46,160,90,.34)}
+.mini-btn.purge{flex:0 0 auto;padding:7px 12px;background:rgba(207,59,62,.16);color:#ffc7c8;border-color:rgba(207,59,62,.4)}
+.mini-btn.purge:hover{background:rgba(207,59,62,.3)}
+
 /* ---------- État vide ---------- */
 .vide{grid-column:1/-1;text-align:center;padding:54px 20px;color:var(--texte-doux)}
 .vide .pin{font-size:2.6rem;display:block;margin-bottom:10px}
@@ -241,7 +255,7 @@ body.admin-on .statut-admin{display:block}
     <div class="compteur-label">parties parfaites</div>
   </div>
 
-  <p class="statut-admin">✅ Connecté en mode admin · <button class="lien-deco" id="btn-logout">Se déconnecter</button></p>
+  <p class="statut-admin">✅ Connecté en mode admin · <button class="lien-deco" id="btn-corbeille">🗑 Corbeille (<span id="corbeille-count">0</span>)</button> · <button class="lien-deco" id="btn-logout">Se déconnecter</button></p>
 
   <div class="toolbar">
     <input type="search" id="recherche" placeholder="🔍 Chercher un joueur, une ligue…" aria-label="Recherche">
@@ -343,6 +357,16 @@ body.admin-on .statut-admin{display:block}
   </div>
 </div>
 
+<!-- ===================== CORBEILLE ===================== -->
+<div class="overlay" id="modale-corbeille" role="dialog" aria-modal="true" aria-labelledby="corbeille-titre">
+  <div class="modale">
+    <button class="fermer-x" id="corbeille-fermer" aria-label="Fermer la corbeille">✕</button>
+    <h2 id="corbeille-titre">🗑 Corbeille</h2>
+    <p class="aide">Les parties supprimées restent ici. Tu peux les restaurer, ou les effacer pour de bon.</p>
+    <div id="corbeille-liste"></div>
+  </div>
+</div>
+
 <!-- ===================== FIREBASE + LOGIQUE ===================== -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
@@ -409,6 +433,7 @@ if (db) {
     items = snap.docs.map(d => ({ id: d.id, ...d.data() }));
     majFiltres();
     render();
+    renderCorbeille();
   }, (err) => console.error("Lecture Firestore :", err));
 }
 
@@ -428,8 +453,9 @@ function animeCompteur(cible){
 
 // --- Remplit les menus de filtres ---
 function majFiltres(){
-  const ligues = [...new Set(items.map(i => i.ligue).filter(Boolean))].sort();
-  const saisons = [...new Set(items.map(i => i.saison).filter(Boolean))].sort().reverse();
+  const actifs = items.filter(i => !i.supprime);
+  const ligues = [...new Set(actifs.map(i => i.ligue).filter(Boolean))].sort();
+  const saisons = [...new Set(actifs.map(i => i.saison).filter(Boolean))].sort().reverse();
   remplirSelect($("filtre-ligue"), ligues, "Toutes les ligues");
   remplirSelect($("filtre-saison"), saisons, "Toutes les saisons");
 }
@@ -446,7 +472,8 @@ function render(){
   const fl = $("filtre-ligue").value;
   const fs = $("filtre-saison").value;
 
-  const liste = items.filter(i => {
+  const actifs = items.filter(i => !i.supprime);
+  const liste = actifs.filter(i => {
     if (fl && i.ligue !== fl) return false;
     if (fs && i.saison !== fs) return false;
     if (txt){
@@ -456,7 +483,7 @@ function render(){
     return true;
   });
 
-  animeCompteur(items.length);
+  animeCompteur(actifs.length);
 
   if (liste.length === 0){
     const aucunFiltre = !txt && !fl && !fs;
@@ -630,9 +657,9 @@ grille.addEventListener("click", async (e) => {
   }
   if (su){
     e.stopPropagation();
-    if (confirm("Supprimer cette partie parfaite? Cette action est définitive.")){
-      try { await deleteDoc(doc(db, "parties", su.dataset.suppr)); }
-      catch (err){ alert("Suppression impossible. Es-tu connecté en admin?"); }
+    if (confirm("Mettre cette partie parfaite à la corbeille? Tu pourras la restaurer plus tard.")){
+      try { await updateDoc(doc(db, "parties", su.dataset.suppr), { supprime: true, supprimeAt: serverTimestamp() }); }
+      catch (err){ alert("Action impossible. Es-tu connecté en admin?"); }
     }
     return;
   }
@@ -670,6 +697,48 @@ function ouvrirDetail(id){
   ouvrir("modale-detail");
 }
 $("detail-fermer").addEventListener("click", () => fermer("modale-detail"));
+
+/* ===================== CORBEILLE ===================== */
+function renderCorbeille(){
+  const corbeille = items.filter(i => i.supprime);
+  const badge = $("corbeille-count");
+  if (badge) badge.textContent = corbeille.length;
+  const liste = $("corbeille-liste");
+  if (!liste) return;
+  if (corbeille.length === 0){
+    liste.innerHTML = `<p class="corbeille-vide">La corbeille est vide. 🧹</p>`;
+    return;
+  }
+  liste.innerHTML = corbeille.map(i => `
+    <div class="corbeille-item">
+      <div class="corbeille-info">
+        <strong>${esc(i.joueur)}</strong>
+        <span>${esc(i.ligue)} · ${esc(i.saison)} · ${esc(formatDate(i.date))}</span>
+      </div>
+      <div class="corbeille-btns">
+        <button class="mini-btn restore" data-restore="${i.id}">↩︎ Restaurer</button>
+        <button class="mini-btn purge" data-purge="${i.id}">✕ Effacer</button>
+      </div>
+    </div>`).join("");
+}
+
+$("btn-corbeille").addEventListener("click", () => { renderCorbeille(); ouvrir("modale-corbeille"); });
+$("corbeille-fermer").addEventListener("click", () => fermer("modale-corbeille"));
+
+$("corbeille-liste").addEventListener("click", async (e) => {
+  const r = e.target.closest("[data-restore]");
+  const p = e.target.closest("[data-purge]");
+  if (r){
+    try { await updateDoc(doc(db, "parties", r.dataset.restore), { supprime: false }); }
+    catch (err){ alert("Restauration impossible. Es-tu connecté en admin?"); }
+  }
+  if (p){
+    if (confirm("Effacer DÉFINITIVEMENT cette partie parfaite? Cette action ne peut PAS être annulée.")){
+      try { await deleteDoc(doc(db, "parties", p.dataset.purge)); }
+      catch (err){ alert("Suppression impossible. Es-tu connecté en admin?"); }
+    }
+  }
+});
 
 /* ===================== UTILITAIRES MODALES ===================== */
 function ouvrir(id){ $(id).classList.add("open"); }

@@ -570,7 +570,7 @@ body.admin-on .statut-admin{display:block}
 <!-- ===================== FIREBASE + LOGIQUE ===================== -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
-import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy, serverTimestamp }
+import { getFirestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy, serverTimestamp }
   from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged }
   from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
@@ -599,7 +599,16 @@ if (firebaseConfig.apiKey === "COLLE_TA_CLE_ICI") {
 let db, auth;
 try {
   const app = initializeApp(firebaseConfig);
-  db = getFirestore(app);
+  // Mémoire cache locale : le site s'ouvre instantanément pour les visiteurs
+  // qui reviennent, pis ça consomme beaucoup moins de lectures Firebase.
+  try {
+    db = initializeFirestore(app, {
+      localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() })
+    });
+  } catch (cacheErr) {
+    db = getFirestore(app);  // repli si le cache n'est pas disponible (vieux navigateur, etc.)
+    console.warn("Cache local non disponible, mode normal :", cacheErr);
+  }
   auth = getAuth(app);
 } catch (e) {
   console.error("Firebase non configuré :", e);

@@ -6,18 +6,18 @@
 <title>Le Temple des 300 — Salon de Quilles Le Domaine</title>
 <meta name="description" content="Le mur d'honneur des parties parfaites (300) et des grosses séries (800+) des ligues du Salon de Quilles Centre Commercial Le Domaine, à Montréal.">
 <meta name="google-site-verification" content="4OJDnjSTgCGwCAts7l43orGa7bgVk6gPA1usUr8m40E" />
-<link rel="canonical" href="https://ultra631.github.io/temple-300/">
+<link rel="canonical" href="https://les300ledomaine.com/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Le Temple des 300">
 <meta property="og:title" content="Le Temple des 300 — Salon de Quilles Le Domaine">
 <meta property="og:description" content="Le mur d'honneur des parties parfaites (300) et des grosses séries (800+) des ligues du Salon de Quilles Centre Commercial Le Domaine, à Montréal.">
-<meta property="og:url" content="https://ultra631.github.io/temple-300/">
-<meta property="og:image" content="https://ultra631.github.io/temple-300/apercu.png">
+<meta property="og:url" content="https://les300ledomaine.com/">
+<meta property="og:image" content="https://les300ledomaine.com/apercu.png">
 <meta property="og:locale" content="fr_CA">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Le Temple des 300 — Salon de Quilles Le Domaine">
 <meta name="twitter:description" content="Le mur d'honneur des parties parfaites (300) et des grosses séries (800+) de nos ligues, à Montréal.">
-<meta name="twitter:image" content="https://ultra631.github.io/temple-300/apercu.png">
+<meta name="twitter:image" content="https://les300ledomaine.com/apercu.png">
 <meta name="theme-color" content="#0a3f8c">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -49,7 +49,7 @@
   --bordure-or:rgba(245,206,46,.55);
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;font-size:18px}
 body{
   font-family:'Outfit',system-ui,sans-serif;
   color:var(--texte);
@@ -133,6 +133,11 @@ a{color:var(--or-clair)}
   border:none;border-radius:12px;padding:11px 18px;box-shadow:0 6px 16px -4px rgba(245,206,46,.5)}
 .btn-ajouter:hover{filter:brightness(1.06)}
 body.admin-on .btn-ajouter{display:inline-flex;align-items:center;gap:6px}
+/* Outils avancés : cachés pour les visiteurs, visibles en mode admin */
+.outil-admin{display:none !important}
+body.admin-on .outil-admin{display:inline-flex !important}
+/* Astuce pour guider les visiteurs */
+.astuce{text-align:center;color:var(--texte-doux);font-size:1rem;margin:22px auto 0;padding:0 16px}
 
 /* ---------- Grille de cartes ---------- */
 .grille{max-width:1080px;margin:30px auto 60px;padding:0 16px}
@@ -164,11 +169,11 @@ body.admin-on .btn-ajouter{display:inline-flex;align-items:center;gap:6px}
 .carte-corps{padding:26px 18px 16px;flex:1;display:flex;flex-direction:column}
 .carte-nom{font-family:'Anton',sans-serif;font-weight:400;font-size:1.5rem;letter-spacing:.3px;color:#fff;line-height:1.05}
 .chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
-.chip{display:inline-flex;align-items:center;gap:5px;font-size:.78rem;font-weight:600;
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:.86rem;font-weight:600;
   background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);
   color:var(--texte-doux);padding:5px 10px;border-radius:999px}
 .chip.or{background:rgba(245,206,46,.14);border-color:rgba(245,206,46,.4);color:var(--or-clair)}
-.meta{margin-top:12px;font-size:.85rem;color:var(--texte-doux);display:flex;flex-wrap:wrap;gap:12px}
+.meta{margin-top:12px;font-size:.95rem;color:var(--texte-doux);display:flex;flex-wrap:wrap;gap:12px}
 .meta b{color:var(--texte);font-weight:600}
 .mot{margin-top:12px;font-style:italic;font-size:.9rem;color:#cdddf7;
   border-left:3px solid var(--or);padding-left:11px;line-height:1.45}
@@ -394,20 +399,21 @@ body.admin-on .statut-admin{display:block}
     <input type="search" id="recherche" placeholder="🔍 Chercher un joueur, une ligue…" aria-label="Recherche">
     <select id="filtre-ligue" aria-label="Filtrer par ligue"><option value="">Toutes les ligues</option></select>
     <select id="filtre-saison" aria-label="Filtrer par saison"><option value="">Toutes les saisons</option></select>
-    <select id="tri" aria-label="Trier">
+    <select id="tri" class="outil-admin" aria-label="Trier">
       <option value="recent">Plus récent</option>
       <option value="ancien">Plus ancien</option>
       <option value="nom">Nom (A→Z)</option>
     </select>
-    <button class="btn-tv" id="btn-groupe" title="Regrouper les cartes par saison">📚 Par saison</button>
-    <button class="btn-tv" id="btn-stats" title="Voir les statistiques">📊 Stats</button>
-    <button class="btn-tv" id="btn-tv" title="Affichage plein écran pour une télé">📺 Mode télé</button>
+    <button class="btn-tv outil-admin" id="btn-groupe" title="Regrouper les cartes par saison">📚 Par saison</button>
+    <button class="btn-tv outil-admin" id="btn-stats" title="Voir les statistiques">📊 Stats</button>
+    <button class="btn-tv outil-admin" id="btn-tv" title="Affichage plein écran pour une télé">📺 Mode télé</button>
     <button class="btn-ajouter" id="btn-ajouter">＋ Ajouter un 300</button>
   </div>
 </header>
 
 <!-- ===================== CONTENU ===================== -->
 <main>
+  <p class="astuce">👆 Touchez une carte pour voir les détails de l'exploit</p>
   <div class="vedette" id="vedette"></div>
   <section class="palmares" id="palmares"></section>
   <section class="grille" id="grille"></section>
